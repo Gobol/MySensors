@@ -187,13 +187,13 @@ public:
 	 *
 	 * @param interruptNumber ignored parameter.
 	 */
-	static void usingInterrupt(uint8_t interruptNumber);
+	static void usingInterrupt(uint32_t interruptNumber);
 	/**
 	 * @brief Not implemented.
 	 *
 	 * @param interruptNumber ignored parameter.
 	 */
-	static void notUsingInterrupt(uint8_t interruptNumber);
+	static void notUsingInterrupt(uint32_t interruptNumber);
 
 private:
 	static uint8_t initialized; //!< @brief SPI initialized flag.

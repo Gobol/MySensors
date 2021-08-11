@@ -32,7 +32,7 @@ RPiClass RPi = RPiClass();
 
 const int* RPiClass::phys_to_gpio = NULL;
 
-void RPiClass::pinMode(uint8_t physPin, uint8_t mode)
+void RPiClass::pinMode(uint32_t physPin, uint8_t mode)
 {
 	uint8_t gpioPin;
 
@@ -44,7 +44,7 @@ void RPiClass::pinMode(uint8_t physPin, uint8_t mode)
 	BCM.pinMode(gpioPin, mode);
 }
 
-void RPiClass::digitalWrite(uint8_t physPin, uint8_t value)
+void RPiClass::digitalWrite(uint32_t physPin, uint8_t value)
 {
 	uint8_t gpioPin;
 
@@ -56,7 +56,7 @@ void RPiClass::digitalWrite(uint8_t physPin, uint8_t value)
 	BCM.digitalWrite(gpioPin, value);
 }
 
-uint8_t RPiClass::digitalRead(uint8_t physPin)
+uint8_t RPiClass::digitalRead(uint32_t physPin)
 {
 	uint8_t gpioPin;
 
@@ -68,7 +68,7 @@ uint8_t RPiClass::digitalRead(uint8_t physPin)
 	return BCM.digitalRead(gpioPin);
 }
 
-uint8_t RPiClass::digitalPinToInterrupt(uint8_t physPin)
+uint8_t RPiClass::digitalPinToInterrupt(uint32_t physPin)
 {
 	uint8_t gpioPin;
 
@@ -140,7 +140,7 @@ int RPiClass::rpiGpioLayout()
 	return -1;
 }
 
-int RPiClass::physToGPIO(uint8_t physPin, uint8_t *gpio)
+int RPiClass::physToGPIO(uint32_t physPin, uint8_t *gpio)
 {
 	if (phys_to_gpio == NULL) {
 		if (rpiGpioLayout() == 1) {

@@ -149,17 +149,17 @@ uint16_t hwFreeMem(void)
 	return FUNCTION_NOT_SUPPORTED;
 }
 
-void hwDigitalWrite(uint8_t pin, uint8_t value)
+void hwDigitalWrite(uint32_t pin, uint8_t value)
 {
 	digitalWrite(pin, value);
 }
 
-int hwDigitalRead(uint8_t pin)
+int hwDigitalRead(uint32_t pin)
 {
 	return digitalRead(pin);
 }
 
-void hwPinMode(uint8_t pin, uint8_t mode)
+void hwPinMode(uint32_t pin, uint8_t mode)
 {
 	pinMode(pin, mode);
 }

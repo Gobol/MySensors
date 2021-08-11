@@ -36,28 +36,28 @@ public:
 	 * @param physPin The physical number of the pin.
 	 * @param mode INPUT or OUTPUT.
 	 */
-	void pinMode(uint8_t physPin, uint8_t mode);
+	void pinMode(uint32_t physPin, uint8_t mode);
 	/**
 	 * @brief Write a high or a low value for the given pin.
 	 *
 	 * @param physPin The physical number of the pin.
 	 * @param value HIGH or LOW.
 	 */
-	void digitalWrite(uint8_t physPin, uint8_t value);
+	void digitalWrite(uint32_t physPin, uint8_t value);
 	/**
 	 * @brief Reads the value from a specified pin.
 	 *
 	 * @param physPin The physical number of the pin.
 	 * @return HIGH or LOW.
 	 */
-	uint8_t digitalRead(uint8_t physPin);
+	uint8_t digitalRead(uint32_t physPin);
 	/**
 	 * @brief Translate the physical pin number to the GPIO number for use in interrupt.
 	 *
 	 * @param physPin The physical number of the pin.
 	 * @return The GPIO pin number.
 	 */
-	uint8_t digitalPinToInterrupt(uint8_t physPin);
+	uint8_t digitalPinToInterrupt(uint32_t physPin);
 	/**
 	 * @brief Translate the physical pin number to the GPIO number.
 	 *
@@ -65,7 +65,7 @@ public:
 	 * @param gpio Pointer to write the GPIO pin number when success.
 	 * @return -1 if FAILURE or 0 if SUCCESS.
 	 */
-	static int physToGPIO(uint8_t physPin, uint8_t *gpio);
+	static int physToGPIO(uint32_t physPin, uint8_t *gpio);
 
 private:
 	static const int *phys_to_gpio; //!< @brief Pointer to array of GPIO pins numbers.

@@ -53,28 +53,28 @@ public:
 	 * @param pin The number of the pin.
 	 * @param mode INPUT or OUTPUT.
 	 */
-	void pinMode(uint8_t pin, uint8_t mode);
+	void pinMode(uint32_t pin, uint8_t mode);
 	/**
 	 * @brief Write a high or a low value for the given pin.
 	 *
 	 * @param pin number.
 	 * @param value HIGH or LOW.
 	 */
-	void digitalWrite(uint8_t pin, uint8_t value);
+	void digitalWrite(uint32_t pin, uint8_t value);
 	/**
 	 * @brief Reads the value from a specified pin.
 	 *
 	 * @param pin The number of the pin.
 	 * @return HIGH or LOW.
 	 */
-	uint8_t digitalRead(uint8_t pin);
+	uint32_t digitalRead(uint32_t pin);
 	/**
 	 * @brief Arduino compatibility function, returns the same given pin.
 	 *
 	 * @param pin The number of the pin.
 	 * @return The same parameter pin number.
 	 */
-	uint8_t digitalPinToInterrupt(uint8_t pin);
+	uint32_t digitalPinToInterrupt(uint32_t pin);
 	/**
 	 * @brief Overloaded assign operator.
 	 *

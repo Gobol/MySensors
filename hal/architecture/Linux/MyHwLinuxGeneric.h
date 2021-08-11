@@ -56,9 +56,9 @@ StdInOutStream Serial = StdInOutStream();
 #define hwReboot()
 #define hwGetSleepRemaining() (0ul)
 
-inline void hwDigitalWrite(uint8_t, uint8_t);
-inline int hwDigitalRead(uint8_t);
-inline void hwPinMode(uint8_t, uint8_t);
+inline void hwDigitalWrite(uint32_t, uint8_t);
+inline int hwDigitalRead(uint32_t);
+inline void hwPinMode(uint32_t, uint8_t);
 
 bool hwInit(void);
 inline void hwReadConfigBlock(void *buf, void *addr, size_t length);

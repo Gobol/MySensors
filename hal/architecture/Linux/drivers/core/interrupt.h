@@ -33,8 +33,8 @@
 extern "C" {
 #endif
 
-void attachInterrupt(uint8_t gpioPin, void(*func)(), uint8_t mode);
-void detachInterrupt(uint8_t gpioPin);
+void attachInterrupt(uint32_t gpioPin, void(*func)(), uint8_t mode);
+void detachInterrupt(uint32_t gpioPin);
 void interrupts();
 void noInterrupts();
 

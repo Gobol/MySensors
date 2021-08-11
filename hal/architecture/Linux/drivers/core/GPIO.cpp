@@ -33,7 +33,7 @@ GPIOClass::GPIOClass()
 {
 	FILE *f;
 	DIR* dp;
-	char file[64];
+	char file[4096];
 
 	dp = opendir("/sys/class/gpio");
 	if (dp == NULL) {
@@ -108,7 +108,7 @@ GPIOClass::~GPIOClass()
 	delete [] exportedPins;
 }
 
-void GPIOClass::pinMode(uint8_t pin, uint8_t mode)
+void GPIOClass::pinMode(uint32_t pin, uint8_t mode)
 {
 	FILE *f;
 
@@ -144,7 +144,7 @@ void GPIOClass::pinMode(uint8_t pin, uint8_t mode)
 	fclose(f);
 }
 
-void GPIOClass::digitalWrite(uint8_t pin, uint8_t value)
+void GPIOClass::digitalWrite(uint32_t pin, uint8_t value)
 {
 	FILE *f;
 	char file[128];
@@ -168,7 +168,7 @@ void GPIOClass::digitalWrite(uint8_t pin, uint8_t value)
 	fclose(f);
 }
 
-uint8_t GPIOClass::digitalRead(uint8_t pin)
+uint32_t GPIOClass::digitalRead(uint32_t pin)
 {
 	FILE *f;
 	char file[128];
@@ -192,7 +192,7 @@ uint8_t GPIOClass::digitalRead(uint8_t pin)
 	return i;
 }
 
-uint8_t GPIOClass::digitalPinToInterrupt(uint8_t pin)
+uint32_t GPIOClass::digitalPinToInterrupt(uint32_t pin)
 {
 	return pin;
 }

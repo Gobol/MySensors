@@ -279,12 +279,12 @@ void SPIDEVClass::endTransaction()
 	pthread_mutex_unlock(&spiMutex);
 }
 
-void SPIDEVClass::usingInterrupt(uint8_t interruptNumber)
+void SPIDEVClass::usingInterrupt(uint32_t interruptNumber)
 {
 	(void)interruptNumber;
 }
 
-void SPIDEVClass::notUsingInterrupt(uint8_t interruptNumber)
+void SPIDEVClass::notUsingInterrupt(uint32_t interruptNumber)
 {
 	(void)interruptNumber;
 }
