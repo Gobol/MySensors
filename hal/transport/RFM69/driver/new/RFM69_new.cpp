@@ -6,7 +6,7 @@
  * network topology allowing messages to be routed to nodes.
  *
  * Created by Henrik Ekblad <henrik.ekblad@mysensors.org>
- * Copyright (C) 2013-2020 Sensnology AB
+ * Copyright (C) 2013-2019 Sensnology AB
  * Full contributor list: https://github.com/mysensors/MySensors/graphs/contributors
  *
  * Documentation: http://www.mysensors.org
@@ -230,23 +230,52 @@ LOCAL bool RFM69_initialise(const uint32_t frequencyHz)
 		RFM69_DEBUG(PSTR("!RFM69:INIT:SANCHK FAIL\n"));
 		return false;
 	}
+	
 	// IRQ
+#if !defined(ARDUINO_ARCH_MEGAAVR)
+	// classic approach
 	RFM69_irq = false;
 	hwPinMode(MY_RFM69_IRQ_PIN, INPUT);
 	attachInterrupt(MY_RFM69_IRQ_NUM, RFM69_interruptHandler, RISING);
+#else
+	// for tiny 2-series (probably also 0 & 1 series, too)
+	RFM69_irq = false;
+	hwPinMode(MY_RFM69_IRQ_PIN, INPUT);
+	// set MY_RFM69_IRQ_PIN's PORTx.PINnCTRL to PORT_ISC_RISING_gc -> generate IRQ on RISING edge
+	*(getPINnCTRLregister(digitalPinToPortStruct(MY_RFM69_IRQ_PIN), digitalPinToBitPosition(MY_RFM69_IRQ_PIN))) = PORT_ISC_RISING_gc;
+	// do not use attachInterrupt on tiny 2-series ! 
+	// see: https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/PinInterrupts.md
+	// 
+#endif
 	return true;
 }
 
-LOCAL void RFM69_clearFIFO(void)
-{
-	(void)RFM69_writeReg(RFM69_REG_IRQFLAGS2, RFM69_IRQFLAGS2_FIFOOVERRUN);
-}
+#if !defined(ARDUINO_ARCH_MEGAAVR)
 // IRQ handler: PayloadReady (RX) & PacketSent (TX) mapped to DI0
 LOCAL void IRQ_HANDLER_ATTR RFM69_interruptHandler(void)
 {
 	// set flag
 	RFM69_irq = true;
 }
+#else
+// IRQ handler for tiny 2-series (probably also 0 & 1 series, too)
+// don't think all those checks are necessary, as there can not be no other IRQ PIN's PORT handler
+ISR(MY_RFM69_IRQ_PORT_vect) {
+//	uint8_t flags=digitalPinToPortStruct(MY_RFM69_IRQ_PIN)->INTFLAGS;
+//	if ((flags & MY_RFM69_IRQ_PORT_bm) == MY_RFM69_IRQ_PORT_bm)
+//	{
+		RFM69_irq = true;
+//	}
+//	digitalPinToPortStruct(MY_RFM69_IRQ_PIN)->INTFLAGS=flags; //clear flags
+	digitalPinToPortStruct(MY_RFM69_IRQ_PIN)->INTFLAGS=0xff; //clear flags
+}
+#endif
+
+LOCAL void RFM69_clearFIFO(void)
+{
+	(void)RFM69_writeReg(RFM69_REG_IRQFLAGS2, RFM69_IRQFLAGS2_FIFOOVERRUN);
+}
+
 
 LOCAL void RFM69_interruptHandling(void)
 {
@@ -748,7 +777,7 @@ LOCAL bool RFM69_isModeReady(void)
 	uint16_t timeout = 0xFFFF;
 	while (!(RFM69_readReg(RFM69_REG_IRQFLAGS1) & RFM69_IRQFLAGS1_MODEREADY) && timeout--) {
 	};
-	return (bool)timeout;
+	return timeout;
 }
 
 LOCAL void RFM69_encrypt(const char *key)

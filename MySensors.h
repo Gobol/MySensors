@@ -63,6 +63,9 @@
 #elif defined(ARDUINO_ARCH_AVR)
 #include "hal/architecture/AVR/MyHwAVR.cpp"
 #include "hal/crypto/AVR/MyCryptoAVR.cpp"
+#elif defined(ARDUINO_ARCH_MEGAAVR)
+#include "hal/architecture/megaAVR/MyHwmegaAVR.cpp"
+#include "hal/crypto/AVR/MyCryptoAVR.cpp"
 #elif defined(ARDUINO_ARCH_SAMD)
 #include "drivers/extEEPROM/extEEPROM.cpp"
 #include "hal/architecture/SAMD/MyHwSAMD.cpp"
@@ -446,6 +449,8 @@ MY_DEFAULT_RX_LED_PIN in your sketch instead to enable LEDs
 // HW mains
 #if defined(ARDUINO_ARCH_AVR)
 #include "hal/architecture/AVR/MyMainAVR.cpp"
+#elif defined(ARDUINO_ARCH_MEGAAVR)
+#include "hal/architecture/megaAVR/MyMainmegaAVR.cpp"
 #elif defined(ARDUINO_ARCH_SAMD)
 #include "hal/architecture/SAMD/MyMainSAMD.cpp"
 #elif defined(ARDUINO_ARCH_ESP8266)
