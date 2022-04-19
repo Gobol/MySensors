@@ -90,7 +90,7 @@ void stInitTransition(void)
 #endif
 
 	// Read node settings (ID, parent ID, GW distance) from EEPROM
-	hwReadConfigBlock((void *)&_transportConfig, (void *)EEPROM_NODE_ID_ADDRESS,
+	hwReadConfigBlock((void *)&_transportConfig, (void *)MY_EEPROM_NODE_ID_ADDRESS,
 	                  sizeof(transportConfig_t));
 }
 
@@ -125,7 +125,7 @@ void stInitUpdate(void)
 			// Set static ID
 			_transportConfig.nodeId = (uint8_t)MY_NODE_ID;
 			// Save static ID to eeprom (for bootloader)
-			hwWriteConfig(EEPROM_NODE_ID_ADDRESS, (uint8_t)MY_NODE_ID);
+			hwWriteConfig(MY_EEPROM_NODE_ID_ADDRESS, (uint8_t)MY_NODE_ID);
 		}
 		// assign ID if set
 		if (_transportConfig.nodeId == AUTO || transportAssignNodeID(_transportConfig.nodeId)) {
@@ -152,7 +152,7 @@ void stParentTransition(void)
 	_transportConfig.distanceGW = 1u;	// assumption, CHKUPL:GWDC will update this variable
 	_transportConfig.parentNodeId = (uint8_t)MY_PARENT_NODE_ID;
 	// save parent ID to eeprom (for bootloader)
-	hwWriteConfig(EEPROM_PARENT_NODE_ID_ADDRESS, (uint8_t)MY_PARENT_NODE_ID);
+	hwWriteConfig(MY_EEPROM_PARENT_NODE_ID_ADDRESS, (uint8_t)MY_PARENT_NODE_ID);
 #else
 	_transportSM.findingParentNode = true;
 	_transportConfig.distanceGW = DISTANCE_INVALID;	// Set distance to max and invalidate parent node ID
@@ -499,7 +499,7 @@ bool transportAssignNodeID(const uint8_t newNodeId)
 		_transportConfig.nodeId = newNodeId;
 		transportHALSetAddress(newNodeId);
 		// Write ID to EEPROM
-		hwWriteConfig(EEPROM_NODE_ID_ADDRESS, newNodeId);
+		hwWriteConfig(MY_EEPROM_NODE_ID_ADDRESS, newNodeId);
 		TRANSPORT_DEBUG(PSTR("TSF:SID:OK,ID=%" PRIu8 "\n"),newNodeId);	// Node ID assigned
 		return true;
 	} else {
@@ -1031,7 +1031,7 @@ void transportClearRoutingTable(void)
 void transportLoadRoutingTable(void)
 {
 #if defined(MY_RAM_ROUTING_TABLE_ENABLED)
-	hwReadConfigBlock((void*)&_transportRoutingTable.route, (void*)EEPROM_ROUTES_ADDRESS, SIZE_ROUTES);
+	hwReadConfigBlock((void*)&_transportRoutingTable.route, (void*)MY_EEPROM_ROUTES_ADDRESS, SIZE_ROUTES);
 	TRANSPORT_DEBUG(PSTR("TSF:LRT:OK\n"));	//  load routing table
 #endif
 }
@@ -1039,7 +1039,7 @@ void transportLoadRoutingTable(void)
 void transportSaveRoutingTable(void)
 {
 #if defined(MY_RAM_ROUTING_TABLE_ENABLED)
-	hwWriteConfigBlock((void*)&_transportRoutingTable.route, (void*)EEPROM_ROUTES_ADDRESS, SIZE_ROUTES);
+	hwWriteConfigBlock((void*)&_transportRoutingTable.route, (void*)MY_EEPROM_ROUTES_ADDRESS, SIZE_ROUTES);
 	TRANSPORT_DEBUG(PSTR("TSF:SRT:OK\n"));	//  save routing table
 #endif
 }
@@ -1049,7 +1049,7 @@ void transportSetRoute(const uint8_t node, const uint8_t route)
 #if defined(MY_RAM_ROUTING_TABLE_ENABLED)
 	_transportRoutingTable.route[node] = route;
 #else
-	hwWriteConfig(EEPROM_ROUTES_ADDRESS + node, route);
+	hwWriteConfig(MY_EEPROM_ROUTES_ADDRESS + node, route);
 #endif
 }
 
@@ -1059,7 +1059,7 @@ uint8_t transportGetRoute(const uint8_t node)
 #if defined(MY_RAM_ROUTING_TABLE_ENABLED)
 	result = _transportRoutingTable.route[node];
 #else
-	result = hwReadConfig(EEPROM_ROUTES_ADDRESS + node);
+	result = hwReadConfig(MY_EEPROM_ROUTES_ADDRESS + node);
 #endif
 	return result;
 }

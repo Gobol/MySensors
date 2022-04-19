@@ -37,7 +37,7 @@ bool transportInit(void)
 	(void)memset(RFM69_psk, 0, 16);
 	(void)memcpy(RFM69_psk, MY_ENCRYPTION_SIMPLE_PASSWD, strnlen(MY_ENCRYPTION_SIMPLE_PASSWD, 16));
 #else
-	hwReadConfigBlock((void *)RFM69_psk, (void*)EEPROM_RF_ENCRYPTION_AES_KEY_ADDRESS, 16);
+	hwReadConfigBlock((void *)RFM69_psk, (void*)MY_EEPROM_RF_ENCRYPTION_AES_KEY_ADDRESS, 16);
 #endif
 	RFM69_encrypt((const char *)RFM69_psk);
 	(void)memset(RFM69_psk, 0, 16); // Make sure it is purged from memory when set
@@ -176,7 +176,7 @@ bool transportInit(void)
 		(void)memset(RFM69_psk, 0, 16);
 		(void)memcpy(RFM69_psk, MY_ENCRYPTION_SIMPLE_PASSWD, strnlen(MY_ENCRYPTION_SIMPLE_PASSWD, 16));
 #else
-		hwReadConfigBlock((void *)RFM69_psk, (void *)EEPROM_RF_ENCRYPTION_AES_KEY_ADDRESS, 16);
+		hwReadConfigBlock((void *)RFM69_psk, (void *)MY_EEPROM_RF_ENCRYPTION_AES_KEY_ADDRESS, 16);
 #endif
 		_radio.encrypt((const char *)RFM69_psk);
 		(void)memset(RFM69_psk, 0, 16); // Make sure it is purged from memory when set

@@ -36,7 +36,7 @@
 
 // SOFTSPI
 #ifdef MY_SOFTSPI
-#include "hal/architecture/AVR/drivers/DigitalIO/DigitalIO.h"
+#	include "hal/architecture/AVR/drivers/DigitalIO/DigitalIO.h"
 #endif
 
 #ifdef __cplusplus
@@ -62,9 +62,11 @@
 #define MY_AVR_TEMPERATURE_GAIN (1.22f)
 #endif
 
-#define wdt_enable() _PROTECTED_WRITE(WDT.CTRLA,WDT_PERIOD_8KCLK_gc)
-#define wdt_reset()	__asm__ __volatile__ ("wdr"::)
-#define wdt_disable() _PROTECTED_WRITE(WDT.CTRLA,0)
+#ifndef wdt_enable
+#	define wdt_enable() _PROTECTED_WRITE(WDT.CTRLA,WDT_PERIOD_8KCLK_gc)
+#	define wdt_reset()	__asm__ __volatile__ ("wdr"::)
+#	define wdt_disable() _PROTECTED_WRITE(WDT.CTRLA,0)
+#endif
 
 // Define these as macros to save valuable space
 #define hwDigitalWrite(__pin, __value) digitalWriteFast(__pin, __value)

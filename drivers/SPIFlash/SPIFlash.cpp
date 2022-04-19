@@ -129,7 +129,7 @@ uint16_t SPIFlash::readDeviceId()
 	command(SPIFLASH_IDREAD); // Read JEDEC ID
 #else
 	select();
-	SPI.transfer(SPIFLASH_IDREAD);
+	SPI.transfer(SPIFLASH_IDREAD);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 #endif
 	uint16_t jedecid = SPI.transfer(0) << 8;
 	jedecid |= SPI.transfer(0);

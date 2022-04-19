@@ -88,13 +88,14 @@ uint32_t hwInternalSleep(uint32_t ms)
 	while (remainingSleep>0) {
 		wdt_disable();
 		sleep_cpu();
-		wdt_enable();
+		wdt_enable(WDTO_SLEEP_FOREVER);		// TODO: What is this param doing ?
 	}
+	return 0;
 }
 
 int8_t hwSleep(uint32_t ms)
 {
-	hwInternalSleep(ms);
+	return hwInternalSleep(ms);
 }
 
 int8_t hwSleep(const uint8_t interrupt, const uint8_t mode, uint32_t ms)

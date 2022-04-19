@@ -269,6 +269,10 @@ ISR(MY_RFM69_IRQ_PORT_vect) {
 //	digitalPinToPortStruct(MY_RFM69_IRQ_PIN)->INTFLAGS=flags; //clear flags
 	digitalPinToPortStruct(MY_RFM69_IRQ_PIN)->INTFLAGS=0xff; //clear flags
 }
+// defuse compiler warning
+//LOCAL void IRQ_HANDLER_ATTR RFM69_interruptHandler(void) {
+//}
+
 #endif
 
 LOCAL void RFM69_clearFIFO(void)

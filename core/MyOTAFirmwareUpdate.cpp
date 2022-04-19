@@ -26,6 +26,8 @@ extern MyMessage _msgTmp;
 // local variables
 #ifdef MY_OTA_USE_I2C_EEPROM
 I2CEeprom _flash(MY_OTA_I2C_ADDR);
+#elif defined(MY_OTA_AT45DB_FLASH_PRESENT)
+AT45DBFlash _flash(MY_OTA_AT45DB_FLASH_TYPE);
 #elif !defined(MCUBOOT_PRESENT)
 SPIFlash _flash(MY_OTA_FLASH_SS, MY_OTA_FLASH_JDECID);
 #endif
@@ -35,12 +37,12 @@ SPIFlash _flash(MY_OTA_FLASH_SS, MY_OTA_FLASH_JDECID);
 #define _flash_initialize()	_flash.initialize()
 #define _flash_readByte(addr)	_flash.readByte(addr)
 #define _flash_writeBytes( dstaddr, data, size) _flash.writeBytes( dstaddr, data, size)
-#define  _flash_blockErase32K(num)  _flash.blockErase32K(num)
+#define _flash_blockErase32K(num)  _flash.blockErase32K(num)
 #define _flash_busy() _flash.busy()
 #else
 #define _flash_initialize()	true
 #define _flash_readByte(addr)	(*((uint8_t *)(addr)))
-#define  _flash_blockErase32K(num)  Flash.erase((uint32_t *)FLASH_AREA_IMAGE_1_OFFSET_0, FLASH_AREA_IMAGE_1_SIZE_0)
+#define _flash_blockErase32K(num)  Flash.erase((uint32_t *)FLASH_AREA_IMAGE_1_OFFSET_0, FLASH_AREA_IMAGE_1_SIZE_0)
 #define _flash_busy() false
 #endif
 
@@ -53,7 +55,7 @@ LOCAL bool _firmwareResponse(uint16_t block, uint8_t *data);
 
 LOCAL void readFirmwareSettings(void)
 {
-	hwReadConfigBlock((void*)&_nodeFirmwareConfig, (void*)EEPROM_FIRMWARE_TYPE_ADDRESS,
+	hwReadConfigBlock((void*)&_nodeFirmwareConfig, (void*)MY_EEPROM_FIRMWARE_TYPE_ADDRESS,
 	                  sizeof(nodeFirmwareConfig_t));
 }
 
@@ -261,7 +263,7 @@ LOCAL bool _firmwareResponse(uint16_t block, uint8_t *data)
 			if (transportIsValidFirmware()) {
 				OTA_DEBUG(PSTR("OTA:FWP:CRC OK\n"));	// FW checksum ok
 				// Write the new firmware config to eeprom
-				hwWriteConfigBlock((void*)&_nodeFirmwareConfig, (void*)EEPROM_FIRMWARE_TYPE_ADDRESS,
+				hwWriteConfigBlock((void*)&_nodeFirmwareConfig, (void*)MY_EEPROM_FIRMWARE_TYPE_ADDRESS,
 				                   sizeof(nodeFirmwareConfig_t));
 #ifndef MCUBOOT_PRESENT
 				// All seems ok, write size and signature to flash (DualOptiboot will pick this up and flash it)

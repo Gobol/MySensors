@@ -159,6 +159,8 @@ MY_DEFAULT_RX_LED_PIN in your sketch instead to enable LEDs
 #ifndef MCUBOOT_PRESENT
 #if defined(MY_OTA_USE_I2C_EEPROM)
 #include "drivers/I2CEeprom/I2CEeprom.cpp"
+#elif defined(MY_OTA_AT45DB_FLASH_PRESENT)
+#include "drivers/AT45DB/AT45DBFlash.cpp"
 #else
 #include "drivers/SPIFlash/SPIFlash.cpp"
 #endif

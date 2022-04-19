@@ -152,7 +152,7 @@ void _begin(void)
 
 	// Read latest received controller configuration from EEPROM
 	// Note: _coreConfig.isMetric is bool, hence empty EEPROM (=0xFF) evaluates to true (default)
-	hwReadConfigBlock((void *)&_coreConfig.controllerConfig, (void *)EEPROM_CONTROLLER_CONFIG_ADDRESS,
+	hwReadConfigBlock((void *)&_coreConfig.controllerConfig, (void *)MY_EEPROM_CONTROLLER_CONFIG_ADDRESS,
 	                  sizeof(controllerConfig_t));
 
 #if defined(MY_OTA_FIRMWARE_FEATURE)
@@ -162,7 +162,7 @@ void _begin(void)
 
 #if defined(MY_SENSOR_NETWORK)
 	// Save static parent ID in eeprom (used by bootloader)
-	hwWriteConfig(EEPROM_PARENT_NODE_ID_ADDRESS, MY_PARENT_NODE_ID);
+	hwWriteConfig(MY_EEPROM_PARENT_NODE_ID_ADDRESS, MY_PARENT_NODE_ID);
 	// Initialise transport layer
 	transportInitialise();
 	// Register transport=ready callback
@@ -456,7 +456,7 @@ bool _processInternalCoreMessage(void)
 			// Pick up configuration from controller (currently only metric/imperial) and store it in eeprom if changed
 			_coreConfig.controllerConfig.isMetric = _msg.data[0] == 0x00 ||
 			                                        _msg.data[0] == 'M'; // metric if null terminated or M
-			hwWriteConfigBlock((void*)&_coreConfig.controllerConfig, (void*)EEPROM_CONTROLLER_CONFIG_ADDRESS,
+			hwWriteConfigBlock((void*)&_coreConfig.controllerConfig, (void*)MY_EEPROM_CONTROLLER_CONFIG_ADDRESS,
 			                   sizeof(controllerConfig_t));
 		} else if (type == I_PRESENTATION) {
 			// Re-send node presentation to controller
@@ -500,7 +500,7 @@ bool _processInternalCoreMessage(void)
 				                       I_DEBUG).set(hwFreeMem()));
 			} else if (debug_msg == 'E') {	// clear MySensors eeprom area and reboot
 				(void)_sendRoute(build(_msgTmp, GATEWAY_ADDRESS, NODE_SENSOR_ID, C_INTERNAL, I_DEBUG).set("OK"));
-				for (uint16_t i = EEPROM_START; i<EEPROM_LOCAL_CONFIG_ADDRESS; i++) {
+				for (uint16_t i = MY_EEPROM_START; i<MY_EEPROM_LOCAL_CONFIG_ADDRESS; i++) {
 					hwWriteConfig(i, 0xFF);
 				}
 				setIndication(INDICATION_REBOOT);
@@ -545,11 +545,11 @@ bool _processInternalCoreMessage(void)
 
 void saveState(const uint8_t pos, const uint8_t value)
 {
-	hwWriteConfig(EEPROM_LOCAL_CONFIG_ADDRESS+pos, value);
+	hwWriteConfig(MY_EEPROM_LOCAL_CONFIG_ADDRESS+pos, value);
 }
 uint8_t loadState(const uint8_t pos)
 {
-	return hwReadConfig(EEPROM_LOCAL_CONFIG_ADDRESS+pos);
+	return hwReadConfig(MY_EEPROM_LOCAL_CONFIG_ADDRESS+pos);
 }
 
 
@@ -796,7 +796,7 @@ void _nodeLock(const char *str)
 {
 #ifdef MY_NODE_LOCK_FEATURE
 	// Make sure EEPROM is updated to locked status
-	hwWriteConfig(EEPROM_NODE_LOCK_COUNTER_ADDRESS, 0);
+	hwWriteConfig(MY_EEPROM_NODE_LOCK_COUNTER_ADDRESS, 0);
 	while (1) {
 		setIndication(INDICATION_ERR_LOCKED);
 		CORE_DEBUG(PSTR("MCO:NLK:NODE LOCKED. TO UNLOCK, GND PIN %" PRIu8 " AND RESET\n"),
@@ -820,7 +820,7 @@ void _checkNodeLock(void)
 {
 #ifdef MY_NODE_LOCK_FEATURE
 	// Check if node has been locked down
-	if (hwReadConfig(EEPROM_NODE_LOCK_COUNTER_ADDRESS) == 0) {
+	if (hwReadConfig(MY_EEPROM_NODE_LOCK_COUNTER_ADDRESS) == 0) {
 		// Node is locked, check if unlock pin is asserted, else hang the node
 		hwPinMode(MY_NODE_UNLOCK_PIN, INPUT_PULLUP);
 		// Make a short delay so we are sure any large external nets are fully pulled
@@ -828,7 +828,7 @@ void _checkNodeLock(void)
 		while (hwMillis() - enter < 2) {}
 		if (hwDigitalRead(MY_NODE_UNLOCK_PIN) == 0) {
 			// Pin is grounded, reset lock counter
-			hwWriteConfig(EEPROM_NODE_LOCK_COUNTER_ADDRESS, MY_NODE_LOCK_COUNTER_MAX);
+			hwWriteConfig(MY_EEPROM_NODE_LOCK_COUNTER_ADDRESS, MY_NODE_LOCK_COUNTER_MAX);
 			// Disable pullup
 			hwPinMode(MY_NODE_UNLOCK_PIN, INPUT);
 			setIndication(INDICATION_ERR_LOCKED);
@@ -838,9 +838,9 @@ void _checkNodeLock(void)
 			hwPinMode(MY_NODE_UNLOCK_PIN, INPUT);
 			_nodeLock("LDB"); //Locked during boot
 		}
-	} else if (hwReadConfig(EEPROM_NODE_LOCK_COUNTER_ADDRESS) == 0xFF) {
+	} else if (hwReadConfig(MY_EEPROM_NODE_LOCK_COUNTER_ADDRESS) == 0xFF) {
 		// Reset value
-		hwWriteConfig(EEPROM_NODE_LOCK_COUNTER_ADDRESS, MY_NODE_LOCK_COUNTER_MAX);
+		hwWriteConfig(MY_EEPROM_NODE_LOCK_COUNTER_ADDRESS, MY_NODE_LOCK_COUNTER_MAX);
 	}
 #endif
 }

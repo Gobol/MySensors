@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/Gobol/MySensors.git"
   },
-  "version": "2.4.0-alpha",
+  "version": "2.4.0-gobo",
   "frameworks": "arduino",
   "platforms": "*",
   "export": {
